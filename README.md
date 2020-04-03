@@ -3,9 +3,10 @@
 Online reservation system & booking software 
 
 ##### Login API
-##### Details API
 
-### Step 1: setup database in .env file
+## Installation Setups
+
+1. setup database in .env file
 
 ```` 
 DB_DATABASE=el-naser
@@ -13,150 +14,27 @@ DB_USERNAME=root
 DB_PASSWORD= 
 ````
 
-## Step 2:Install Laravel Sanctum.
-
-````
-composer require laravel/sanctum
-````
-
-## Step 3:Publish the Sanctum configuration and migration files .
-
-````
-php artisan vendor:publish --provider="Laravel\Sanctum\SanctumServiceProvider"
-
-````
-
-## Step 4:Run your database migrations.
+ 2. Run your database migrations.
 
 ````
 php artisan migrate
 
 ````
-
-## Step 5:Add the Sanctum's middleware.
-
-````
-../app/Http/Kernel.php
-
-use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
-
-...
-
-    protected $middlewareGroups = [
-        ...
-
-        'api' => [
-            EnsureFrontendRequestsAreStateful::class,
-            'throttle:60,1',
-            \Illuminate\Routing\Middleware\SubstituteBindings::class,
-        ],
-    ];
-
-    ...
-],
+3. Run your database seed.
 
 ````
-
-## Step 6:To use tokens for users.
-
-````
-use Laravel\Sanctum\HasApiTokens;
-
-class User extends Authenticatable
-{
-    use HasApiTokens, Notifiable;
-}
-
-````
-
-## Step 7:Let's create the seeder for the User model
-
-```javascript 
-php artisan make:seeder UsersTableSeeder
-````
-
-## Step 8:Now let's insert as record
-
-```javascript 
-DB::table('users')->insert([
-    'name' => 'John Doe',
-    'email' => 'john@doe.com',
-    'password' => Hash::make('password')
-]);
-````
-
-## Step 9:To seed users table with user
-
-```javascript 
 php artisan db:seed --class=UsersTableSeeder
-````
-
-
-## Step 10:  create a controller nad  /login route in the routes/api.php file:
-
-
-```javascript 
-<?php
-
-namespace App\Http\Controllers;
-
-use Illuminate\Http\Request;
-use App\User;
-use Illuminate\Support\Facades\Hash;
-class UserController extends Controller
-{
-    // 
-
-    function index(Request $request)
-    {
-        $user= User::where('email', $request->email)->first();
-        // print_r($data);
-            if (!$user || !Hash::check($request->password, $user->password)) {
-                return response([
-                    'message' => ['These credentials do not match our records.']
-                ], 404);
-            }
-        
-             $token = $user->createToken('my-app-token')->plainTextToken;
-        
-            $response = [
-                'user' => $user,
-                'token' => $token
-            ];
-        
-             return response($response, 201);
-    }
-}
-
 
 ````
 
+4. Test with postman.
 
-## Step 11: Test with postman, Result will be below
-
-```javascript 
-
+````
 {
-    "user": {
-        "id": 1,
-        "name": "John Doe",
-        "email": "john@doe.com",
-        "email_verified_at": null,
-        "created_at": null,
-        "updated_at": null
-    },
-    "token": "AbQzDgXa..."
+"email":"admin@admin.com",
+"password":"password"
 }
 
 ````
 
-## Step 11: Make Details API or any other with secure route  
-
-```javascript 
-
-Route::middleware('auth:sanctum')->get('/user', function () {
-   //controller path 
-});
-
-````
 
